@@ -75,7 +75,7 @@ create table SecurityQuestions (
 create table RecoveryEmails (
     id int not null auto_increment,
     email varchar(100) not null,
-    verified boolean,
+    verified boolean not null,
     created timestamp not null,
     modified timestamp not null,
     primary key (id)
@@ -97,7 +97,7 @@ create table RecoveryEmails (
 create table RecoveryPhoneNumbers (
     id int not null auto_increment,
     phoneNumber varchar(20) not null,
-    verified: boolean,
+    verified boolean not null,
     created timestamp not null,
     modified timestamp not null,
     primary key (id)
