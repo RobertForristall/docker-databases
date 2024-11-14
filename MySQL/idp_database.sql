@@ -185,9 +185,11 @@ create table AuditLogs (
 */
 create table Roles (
     id int not null auto_increment,
-    roleName varchar(30) not null unique,
+    applicationName varchar(30) not null,
+    roleName varchar(30) not null,
     roleDescription varchar(100) not null,
-    primary key (id)
+    primary key (id),
+    unique key application_role(applicationName, roleName)
 );
 
 /*
@@ -217,3 +219,11 @@ create table AssignedRoles (
     - Trigger on Verification: Delete the verification entry if the user is deleted due to not verifying within the alloted time
     - Condition on AuditLogs: Un-verified users can only perform two actions (Signup and Verification)
 */
+
+-- delimiter //
+-- create trigger add_verification_row after insert on Users
+--     for each row
+--     BEGIN
+--         insert into Verification set userId = NEW.id;
+--     END;//
+-- delimiter ;
