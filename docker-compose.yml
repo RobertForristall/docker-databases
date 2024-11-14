@@ -8,9 +8,34 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports: 
       - 3306:3306
+  mysql-session:
+    image: mariadb:10.7
+    container_name: mysql-session
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - 3307:3306
+    volumes:
+      - ./Session/:/docker-entrypoint-initdb.d
+      - mysql-session-data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "echo",
+          "SELECT 1",
+          "|",
+          "mariadb",
+          '"-p$${MARIADB_ROOT_PASSWORD}"',
+        ]
+      interval: 20s
+      timeout: 5s
+      retries: 5
 
 networks:
   database-network:
 
 volumes:
   mysql-data:
+  mysql-session-data:
