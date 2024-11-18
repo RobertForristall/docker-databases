@@ -124,7 +124,7 @@ create table RecoveryResources (
     emailResourceId int,
     phoneResourceId int,
     primary key (id),
-    foreign key (userId) references Users(id),
+    foreign key (userId) references Users(id) on delete cascade,
     foreign key (questionsResourceId) references SecurityQuestions(id),
     foreign key (emailResourceId) references RecoveryEmails(id),
     foreign key (phoneResourceId) references RecoveryPhoneNumbers(id)
@@ -207,6 +207,33 @@ create table AssignedRoles (
     foreign key (userId) references Users(id),
     foreign key (roleId) references Roles(id) 
 );
+
+insert into Users (email, password, verified, firstName, lastName, dob, created, modified)
+values ('__ROOT_USER_EMAIL__', '__ROOT_USER_PASS__', true, '__ROOT_USER_FNAME__', '__ROOT_USER_LNAME__', '__ROOT_USER_DOB__', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+
+insert into SecurityQuestions (firstQuestion, firstAnswer, secondQuestion, secondAnswer, created, modified)
+values ('__ROOT_USER_FIRST_QUESTION__', '__ROOT_USER_FIRST_ANSWER__', '__ROOT_USER_SECOND_QUESTION__', '__ROOT_USER_SECOND_ANSWER__', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+
+insert into RecoveryPhoneNumbers (phoneNumber, verified, created, modified)
+values ('__ROOT_USER_RECOVERY_PHONE__', true, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+
+insert into RecoveryEmails (email, verified, created, modified)
+values ('__ROOT_USER_RECOVERY_EMAIL__', true, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+
+insert into RecoveryResources (userId, questionsResourceId, emailResourceId, phoneResourceId)
+values (1, 1, 1, 1);
+
+insert into AuditLogs (userId, event, action, status, created)
+values (1, 'IDP', 'Signup', 'Success', CURRENT_TIMESTAMP());
+
+insert into Roles (applicationName, roleName, roleDescription)
+values ('IDP', 'Admin', 'Main admin for managing the IDP server');
+
+insert into AuditLogs (userId, event, action, status, created)
+values (1, 'IDP', 'Create Role "Admin"', 'Success', CURRENT_TIMESTAMP());
+
+insert into AssignedRoles (userId, roleId)
+values (1, 1);
 
 /*
     Database TODOs:
