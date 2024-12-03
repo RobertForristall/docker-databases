@@ -130,6 +130,13 @@ create table RecoveryResources (
     foreign key (phoneResourceId) references RecoveryPhoneNumbers(id)
 );
 
+create table EmailRecoveryCode (
+    userId int not null,
+    code varchar(100) not null,
+    primary key (userId),
+    foreign key (userId) references Users(id) on delete cascade
+);
+
 /*
     Verification: Verification tokens to be used by a user to verify their provided resources
 
@@ -234,6 +241,16 @@ values (1, 'IDP', 'Create Role "Admin"', 'Success', CURRENT_TIMESTAMP());
 
 insert into AssignedRoles (userId, roleId)
 values (1, 1);
+
+-- delimiter //
+-- create trigger delete_verification_row_after_verified after update on Users
+-- for each row
+-- BEGIN
+--     IF NEW.verified = true and (select count(*) from Verification where userId = NEW.id) > 0 then
+--     	delete from Verification where userId = NEW.id;
+--     END IF;
+-- END; //
+-- delimiter ;
 
 /*
     Database TODOs:
